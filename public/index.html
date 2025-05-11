@@ -30,17 +30,17 @@
   <body>
     <canvas id="JeelizVTOWidgetCanvas"></canvas>
     <div id="error"></div>
-  <script src="/jeelizGlanceTracker.js"></script>
+    <script src="/JeelizVTOWidget.js"></script>
     <script>
       const errorDiv = document.getElementById("error");
-      let modelLoaded = false; // Start the widget but delay model loading until message is received
+      let modelLoaded = false;
       JeelizVTOWidget.start({
         canvasId: "JeelizVTOWidgetCanvas",
-        NNCPath: "https://layne-try-on.vercel.app/NNC.json",
+        NNCPath: "/NNC.json",
         callbackReady: function () {
           errorDiv.innerText = "Waiting for model data from React Native...";
         },
-      }); // Listen for messages from React Native WebView
+      });
       window.addEventListener("message", function (event) {
         try {
           const data = JSON.parse(event.data);
