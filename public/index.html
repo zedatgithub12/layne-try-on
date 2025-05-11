@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Eyewear Try-On</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background-color: #000;
+        height: 100%;
+        overflow: hidden;
+      }
+      #JeelizVTOWidgetCanvas {
+        width: 100vw;
+        height: 100vh;
+        display: block;
+      }
+      #error {
+        color: white;
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        font-family: sans-serif;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="JeelizVTOWidgetCanvas"></canvas>
+    <div id="error"></div>
+    <script src="https://appstatic.jeeliz.com/JeelizVTOWidget/releases/JeelizVTOWidget.js"></script>
+    <script>
+      const errorDiv = document.getElementById("error");
+      let modelLoaded = false; // Start the widget but delay model loading until message is received
+      JeelizVTOWidget.start({
+        canvasId: "JeelizVTOWidgetCanvas",
+        NNCPath: "https://appstatic.jeeliz.com/JeelizVTOWidget/NNC.json",
+        callbackReady: function () {
+          errorDiv.innerText = "Waiting for model data from React Native...";
+        },
+      }); // Listen for messages from React Native WebView
+      window.addEventListener("message", function (event) {
+        try {
+          const data = JSON.parse(event.data);
+          if (Array.isArray(data) && data.length > 0) {
+            const modelUrl = data[0].modelUrl;
+            JeelizVTOWidget.load_model(modelUrl);
+            errorDiv.innerText = `Loaded: ${modelUrl}`;
+            modelLoaded = true;
+          } else {
+            errorDiv.innerText = "Invalid model array received.";
+          }
+        } catch (e) {
+          errorDiv.innerText = "Error parsing message: " + e.message;
+        }
+      });
+    </script>
+  </body>
+</html>
