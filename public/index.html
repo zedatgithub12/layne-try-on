@@ -52,16 +52,31 @@
       window.addEventListener("message", function (event) {
         try {
           const data = JSON.parse(event.data);
-          if (Array.isArray(data) && data.length > 0) {
-            const modelUrl = data[0].modelUrl;
-            JeelizVTOWidget.load_model(modelUrl);
-          } else {
-            console.error("Invalid or empty model data.");
+          if (Array.isArray(data) && data[0].imageUrl) {
+            loadGlassesImage(data[0].imageUrl);
           }
-        } catch (e) {
-          console.error("JSON parse failed:", e.message, event.data);
+        } catch (err) {
+          console.error("Failed to parse message data", err);
         }
       });
+
+      function loadGlassesImage(url) {
+        const img = document.createElement("img");
+        img.src = url;
+        img.id = "glassesOverlay";
+        img.style.position = "absolute";
+        img.style.top = "40%";
+        img.style.left = "50%";
+        img.style.transform = "translate(-50%, -50%)";
+        img.style.width = "200px";
+        img.style.pointerEvents = "none";
+
+        // Clean up old
+        const oldImg = document.getElementById("glassesOverlay");
+        if (oldImg) oldImg.remove();
+
+        document.body.appendChild(img);
+      }
     </script>
   </body>
 </html>
