@@ -55,13 +55,11 @@
           if (Array.isArray(data) && data.length > 0) {
             const modelUrl = data[0].modelUrl;
             JeelizVTOWidget.load_model(modelUrl);
-            errorDiv.innerText = `Loaded: ${modelUrl}`;
-            modelLoaded = true;
           } else {
-            errorDiv.innerText = "Invalid model array received.";
+            console.error("Invalid or empty model data.");
           }
         } catch (e) {
-          errorDiv.innerText = "Error parsing message: " + e.message;
+          console.error("JSON parse failed:", e.message, event.data);
         }
       });
     </script>
